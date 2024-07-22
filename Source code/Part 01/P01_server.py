@@ -1,10 +1,11 @@
 import socket
+import os
 
 HOST = '127.0.0.1'
 PORT = 65431
 BUFSIZE = 4096
 
-def load_file_list(filename="files/file_list.txt"):
+def load_file_list(filename="C:/Users/ACER/Desktop/MMT_2024/Source code/files/file_list.txt"):
     with open(filename, 'r') as file:
         return [line.strip() for line in file]
 
@@ -23,7 +24,12 @@ try:
         if not file_name:
             break
 
-
+        with open(os.path.join("files", file_name), 'rb') as file:
+            while True:
+                bytes_read = file.read(BUFSIZE)
+                if not bytes_read:
+                    break
+                conn.sendall(bytes_read)
 
 except KeyboardInterrupt:
     conn.close()
