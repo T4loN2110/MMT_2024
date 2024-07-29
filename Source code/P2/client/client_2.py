@@ -75,8 +75,9 @@ def downloadFile(socket, fileList,totalByte:dict):
         if(dowloadedByte==totalByte):
             break
 def main():
-    server_address = (HOST, PORT)
-
+    host=input("Enter host ip:")
+    port=int(input("Enter port:"))
+    server_address = (host, port)
     downloaded_files = set()
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print(f'Connecting to {server_address}')
