@@ -2,6 +2,7 @@ import pickle
 import selectors
 import socket
 import os
+import sys
 import threading
 import time
 HOST = "127.0.0.1"
@@ -29,11 +30,16 @@ def getDownloadFiles(socket):
         msg=""
         while True:
             d = socket.recv(1).decode()
+            if(not d):
+                print("Client disconnected")
+                socket.close()
+                sys.exit()
             if d == '\n':
                 break
             msg += d
         if(msg=='Start Download'):
             return listFile
+        
         download_file,prio = msg.split(' ')
         if not download_file:
             return listFile
@@ -76,19 +82,10 @@ def handleClient(socket):
     socket.sendall(file_data.encode() + b'\n')
     # Chờ client kết nối
     while True:
-        try:
-        # Nhận tên file yêu cầu tải của client
-            fileList=getDownloadFiles(socket)
-            if(len(fileList)>0):
-                for file,prio in fileList.items():
-                    threading.Thread(target=processFile,args=(socket,file,prio)).start()
-            
-        except KeyboardInterrupt:
-            socket.close() 
-            break
-    print("Client disconnected") 
-    socket.close()
-    return
+        fileList=getDownloadFiles(socket)
+        if(len(fileList)>0):
+            for file,prio in fileList.items():
+                threading.Thread(target=processFile,args=(socket,file,prio)).start()
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((HOST, PORT))
