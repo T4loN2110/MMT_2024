@@ -72,7 +72,9 @@ def processFile(socket,file,prio):
                 sendContent=str("M@").encode()
             sendContent+=str(file+"@"+str(len(content))+"\n").encode()
             sendContent+=content
-            socket.sendall(sendContent) 
+            socket.sendall(sendContent)
+            #time.sleep(0.01)
+        
     return           
 # Xử lý kết nối và yêu cầu từ client
 def handleClient(socket):
@@ -98,7 +100,6 @@ def main():
             print(addr)
             thread=threading.Thread(target=handleClient, args=(conn, ))
             thread.start()
-            print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
     except KeyboardInterrupt:
         print('Server closed.')
     finally:
