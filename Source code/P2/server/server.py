@@ -5,7 +5,7 @@ import os
 import sys
 import threading
 import time
-HOST = "127.0.0.1"
+HOST = ""
 PORT = 54321
 
 # Đọc file_list
