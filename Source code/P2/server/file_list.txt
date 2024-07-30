@@ -1,5 +1,0 @@
-File1.bin 5MB
-File2.bin 10MB
-File3.bin 15MB
-File4.bin 20MB
-File5.bin 25MB

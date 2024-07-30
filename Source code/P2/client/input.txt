@@ -1,2 +1,0 @@
-File2.bin NORMAL
-File5.bin CRITICAL
