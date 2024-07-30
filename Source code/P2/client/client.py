@@ -76,7 +76,8 @@ def downloadFile(socket, fileList,totalByte:dict):
 def main():
     host=input("Enter host ip:")
     port=int(input("Enter port:"))
-    os.mkdir("output")
+    if(not os.path.exists("output")):
+        os.mkdir("output")
     server_address = (host, port)
     downloaded_files = set()
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -105,7 +106,7 @@ def main():
                 threading.Thread(target=downloadFile,args=(client,download_files,totalByte)).start()
             time.sleep(2)
         except KeyboardInterrupt:
-            print('\nClosed client')
+            print('\n\n\nClosed client')
             client.close()
             break
 

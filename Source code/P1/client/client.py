@@ -56,7 +56,8 @@ def downloadFile(socket, file_name):
 def main():
     host=input("Enter host ip:")
     port=int(input("Enter port:"))
-    os.mkdir("output")
+    if(not os.path.exists("output")):
+        os.mkdir("output")
     server_address = (host, port)
 
     downloaded_files = set()
