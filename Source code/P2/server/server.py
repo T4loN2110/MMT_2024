@@ -92,7 +92,9 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((HOST, PORT))
     s.listen(1)
-    print("Waiting for Client")
+    hostname = socket.gethostname()
+    host = socket.gethostbyname(hostname)
+    print("Waiting for Client on "+str(host)+":"+str(PORT))
     try:
         while True:
             conn, addr = s.accept()

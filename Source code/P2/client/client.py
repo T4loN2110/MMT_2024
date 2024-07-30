@@ -4,7 +4,7 @@ import threading
 import time
 HOST = "127.0.0.1"
 PORT = 54321
-
+    
 # Đọc file input
 def readInputFile():
     input_file = []
@@ -34,6 +34,7 @@ def receiveFileList(socket):
     return res
 
 def downloadFile(socket, fileList,totalByte:dict):
+    
     dowloadedByte=dict()
     for file in fileList:
     # Gửi tên file cần tải cho server
@@ -43,8 +44,10 @@ def downloadFile(socket, fileList,totalByte:dict):
     socket.send("Start Download\n".encode())
     num=len(fileList)
     while True:
+        if(stop==True): return
         header = ""
         while True:
+            if(stop==True): return
             d = socket.recv(1).decode()
             if d == '\n':
                 break
@@ -58,26 +61,25 @@ def downloadFile(socket, fileList,totalByte:dict):
             mode='w+b'
         else:
             mode='ab'
+        if(not os.path.exists("output")):
+            os.mkdir("output")
         with open(os.path.join('output', filename), mode) as f:
-            try:
-                content=socket.recv(chunkSize)
-                f.write(content)
-                dowloadedByte[filename] += len(content)
-                for file in fileList:
-                    name=file.split()[0]
-                    percent_complete = (dowloadedByte[name] / totalByte[name]) * 100
-                    print(f"Downloading {name} ... {percent_complete:.2f}%")
-                print("\033["+str(num)+"A", end="")
-            except KeyboardInterrupt: 
-                print('Stop downloading')
-                return
+            
+            content=socket.recv(chunkSize)
+            f.write(content)
+            dowloadedByte[filename] += len(content)
+            for file in fileList:
+                name=file.split()[0]
+                percent_complete = (dowloadedByte[name] / totalByte[name]) * 100
+                print(f"Downloading {name} ... {percent_complete:.2f}%")
+            print("\033["+str(num)+"A", end="")
         if(dowloadedByte==totalByte):
             break
 def main():
     host=input("Enter host ip:")
     port=int(input("Enter port:"))
-    if(not os.path.exists("output")):
-        os.mkdir("output")
+    global stop
+    stop=False
     server_address = (host, port)
     downloaded_files = set()
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -106,7 +108,10 @@ def main():
                 threading.Thread(target=downloadFile,args=(client,download_files,totalByte)).start()
             time.sleep(2)
         except KeyboardInterrupt:
-            print('\n\n\nClosed client')
+            stop=True
+            for i in range(len(downloaded_files)):
+                print()
+            print('Closed client')
             client.close()
             break
 

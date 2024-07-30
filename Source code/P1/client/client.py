@@ -36,6 +36,8 @@ def downloadFile(socket, file_name):
         print(f'File {file_name} not found')
         return
     file_size = int(file_size)
+    if(not os.path.exists("output")):
+        os.mkdir("output")
     with open(os.path.join('output', file_name), 'w+b') as f:
         total_bytes = 0
         while total_bytes < file_size:
@@ -56,8 +58,7 @@ def downloadFile(socket, file_name):
 def main():
     host=input("Enter host ip:")
     port=int(input("Enter port:"))
-    if(not os.path.exists("output")):
-        os.mkdir("output")
+    
     server_address = (host, port)
 
     downloaded_files = set()
